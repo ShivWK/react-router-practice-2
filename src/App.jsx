@@ -36,10 +36,7 @@ export default function App() {
       <Route
         index
         element={<h1>Home page</h1>}
-        loader={async ()=> {
-          console.log("hi");
-          return null;
-        }}
+        
       />
       <Route
         path="protected"
@@ -53,12 +50,17 @@ export default function App() {
           path="nestedProtected1" 
           element={<h1>This is nested protected route 1</h1>}
           loader={async ()=> {
-              console.log("nested Protected Route 1");
+             const isLoggedIn = 0;
+
+             if (!isLoggedIn) {
+              throw redirect("/login?message=You need to login first");
+             }
+
             return null;
           }}
         />
 
-        <Route 
+        {/* <Route 
           path="nestedProtected2" 
           element={<h1>This is nested protected route 2</h1>}
           loader={async ()=> {
@@ -74,11 +76,20 @@ export default function App() {
               console.log("nested Protected Route 3");
             return null;
           }}
-        />
+        /> */}
       </Route>
-      <Route path="login" element={<h1>Login page goes here</h1>} />
+      <Route path="login" element={<Login />} />
     </Route>
   ))
 
   return <RouterProvider router={router}/> 
+}
+
+function Login() {
+  let query = new URLSearchParams(window.location.search);
+
+  return <div>
+    { query.get("message") && <h2>{query.get("message")}</h2>}
+    <h1>Hi this is login page</h1>
+  </div>
 }
