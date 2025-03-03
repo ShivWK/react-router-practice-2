@@ -2,7 +2,9 @@ import {
   createBrowserRouter, 
   Route, 
   createRoutesFromElements, 
-  RouterProvider
+  RouterProvider,
+  redirect,
+  Outlet
 } from 'react-router-dom';
 
 import Layout from './components/Layout';
@@ -23,35 +25,53 @@ export default function App() {
   // )
 
   const router = createBrowserRouter(createRoutesFromElements(
-    <Route path="/" element={<Layout />}>
+    <Route 
+      path="/" 
+      element={<Layout />}
+      loader={async ()=> {
+        console.log("Layout parent");
+        return null;
+      }}
+    >
       <Route
         index
         element={<h1>Home page</h1>}
         loader={async ()=> {
+          console.log("hi");
           return null;
         }}
       />
       <Route
         path="protected"
-        element={<h1>Super secret info here</h1>}
+        element={<div><h1>Super secret info here</h1><Outlet /></div>}
         loader={async ()=> {
-          let rand = Math.random() * 2;
-            setTimeout(()=> {
-              console.log("Protected Route");
-            }, rand);
-  
-            return null;
+          console.log("protected parent");
+          return null;
         }}
       >
         <Route 
-          path="nestedProtected" 
-          element={<h1>This is nested protected route</h1>}
+          path="nestedProtected1" 
+          element={<h1>This is nested protected route 1</h1>}
           loader={async ()=> {
-            let rand = Math.random() * 2;
-            setTimeout(()=> {
-              console.log("nested Protected Route");
-            }, rand);
-  
+              console.log("nested Protected Route 1");
+            return null;
+          }}
+        />
+
+        <Route 
+          path="nestedProtected2" 
+          element={<h1>This is nested protected route 2</h1>}
+          loader={async ()=> {
+              console.log("nested Protected Route 2");
+            return null;
+          }}
+        />
+
+        <Route 
+          path="nestedProtected3" 
+          element={<h1>This is nested protected route 3</h1>}
+          loader={async ()=> {
+              console.log("nested Protected Route 3");
             return null;
           }}
         />
